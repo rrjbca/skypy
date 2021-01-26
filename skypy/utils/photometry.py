@@ -161,7 +161,7 @@ class SpectrumTemplates(metaclass=ABCMeta):
     def __init__(self):
         raise NotImplementedError
 
-    def absolute_magnitudes(self, coefficients, filters, stellar_mass=None):
+    def absolute_magnitudes(self, coefficients, filters):
         '''Galaxy AB absolute magnitudes from template spectra.
 
         This function calculates photometric AB absolute magnitudes for
@@ -174,8 +174,6 @@ class SpectrumTemplates(metaclass=ABCMeta):
             Array of spectrum coefficients.
         filters : str or list of str
             Bandpass filter specification for `~speclite.filters.load_filters`.
-        stellar_mass : (ng,) array_like, optional
-            Optional array of stellar masses for each galaxy in template units.
 
         Returns
         -------
@@ -183,12 +181,9 @@ class SpectrumTemplates(metaclass=ABCMeta):
             The absolute AB magnitude of each object in each filter, where
             ``nf`` is the number of loaded filters.
         '''
-        mass_modulus = -2.5*np.log10(stellar_mass) if stellar_mass is not None else 0
-        M = mag_ab(self.wavelength, self.templates, filters, coefficients=coefficients)
-        return (M.T + mass_modulus).T
+        return mag_ab(self.wavelength, self.templates, filters, coefficients=coefficients)
 
-    def apparent_magnitudes(self, coefficients, redshift, filters, cosmology, *,
-                            stellar_mass=None, resolution=1000):
+    def apparent_magnitudes(self, coefficients, redshift, filters, cosmology, *, resolution=1000):
         '''Galaxy AB apparent magnitudes from template spectra.
 
         This function calculates photometric AB apparent magnitudes for
@@ -206,8 +201,6 @@ class SpectrumTemplates(metaclass=ABCMeta):
             Bandpass filter specification for `~speclite.filters.load_filters`.
         cosmology : Cosmology
             Astropy Cosmology object to calculate distance modulus.
-        stellar_mass : (ng,) array_like, optional
-            Optional array of stellar masses for each galaxy in template units.
         resolution : integer, optional
             Redshift resolution for intepolating magnitudes. Default is 1000. If
             the number of objects is less than resolution their magnitudes are
@@ -220,7 +213,5 @@ class SpectrumTemplates(metaclass=ABCMeta):
             ``nf`` is the number of loaded filters.
         '''
         distmod = cosmology.distmod(redshift).value
-        mass_modulus = -2.5*np.log10(stellar_mass) if stellar_mass is not None else 0
-        m = mag_ab(self.wavelength, self.templates, filters, redshift=redshift,
-                   coefficients=coefficients, distmod=distmod, interpolate=resolution)
-        return (m.T + mass_modulus).T
+        return mag_ab(self.wavelength, self.templates, filters, redshift=redshift,
+                      coefficients=coefficients, distmod=distmod, interpolate=resolution)

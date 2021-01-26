@@ -180,7 +180,7 @@ class KCorrectTemplates(SpectrumTemplates):
 
         return np.sum(coefficients * self.mremain * self.mets) / np.sum(coefficients * self.mremain)
 
-    def m300(self, coefficients, stellar_mass=None):
+    def m300(self, coefficients):
         r'''Stellar mass formed in the last 300 Myr.
 
         This function calculates the mass of new stars formed within the last
@@ -191,15 +191,11 @@ class KCorrectTemplates(SpectrumTemplates):
         ----------
         coefficients : (ng, 5) array_like
             Array of template coefficients.
-        stellar_mass : (ng,) array_like, optional
-            Optional array of stellar masses for each galaxy.
 
         Returns
         -------
         m300 : (ng,) array_like
-            Total mass of new stars formed in the last 300 Myr as a fraction of
-            the stellar mass of each galaxy. If stellar_mass is given, instead
-            returns the absolute mass of new stars.
+            Total mass of new stars formed in the last 300 Myr.
 
         References
         ----------
@@ -207,10 +203,9 @@ class KCorrectTemplates(SpectrumTemplates):
 
         '''
 
-        sm = stellar_mass if stellar_mass is not None else 1
-        return sm * np.sum(coefficients * self.mass300) / np.sum(coefficients * self.mass)
+        return np.sum(coefficients * self.mass300) / np.sum(coefficients * self.mass)
 
-    def m1000(self, coefficients, stellar_mass=None):
+    def m1000(self, coefficients):
         r'''Stellar mass formed in the last 1 Gyr.
 
         This function calculates the mass of new stars formed within the last
@@ -221,15 +216,11 @@ class KCorrectTemplates(SpectrumTemplates):
         ----------
         coefficients : (ng, 5) array_like
             Array of template coefficients.
-        stellar_mass : (ng,) array_like, optional
-            Optional array of stellar masses for each galaxy.
 
         Returns
         -------
         m1000 : (ng,) array_like
-            Total mass of new stars formed in the last 1 Gyr as a fraction of
-            the stellar mass of each galaxy. If stellar_mass is given, instead
-            returns the absolute mass of new stars.
+            Total mass of new stars formed in the last 1 Gyr.
 
         References
         ----------
@@ -237,8 +228,7 @@ class KCorrectTemplates(SpectrumTemplates):
 
         '''
 
-        sm = stellar_mass if stellar_mass is not None else 1
-        return sm * np.sum(coefficients * self.mass1000) / np.sum(coefficients * self.mass)
+        return np.sum(coefficients * self.mass1000) / np.sum(coefficients * self.mass)
 
 
 kcorrect = KCorrectTemplates(hdu=1)

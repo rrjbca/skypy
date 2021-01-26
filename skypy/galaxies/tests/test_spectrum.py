@@ -105,25 +105,6 @@ def test_kcorrect_magnitudes():
     with pytest.raises(ValueError):
         mB = kcorrect.apparent_magnitudes(coeff_bad, z, multiple_filters, Planck15)
 
-    # Test stellar_mass parameter
-    sm = [10, 20, 30, 40, 50, 60, 70]
-
-    MB = kcorrect.absolute_magnitudes(coeff, 'bessell-B')
-    MB_s = kcorrect.absolute_magnitudes(coeff, 'bessell-B', stellar_mass=sm)
-    np.testing.assert_allclose(MB_s, MB - 2.5*np.log10(sm))
-
-    MB = kcorrect.absolute_magnitudes(coeff, multiple_filters)
-    MB_s = kcorrect.absolute_magnitudes(coeff, multiple_filters, stellar_mass=sm)
-    np.testing.assert_allclose(MB_s, MB - 2.5*np.log10(sm)[:, np.newaxis])
-
-    mB = kcorrect.apparent_magnitudes(coeff, z, 'bessell-B', Planck15)
-    mB_s = kcorrect.apparent_magnitudes(coeff, z, 'bessell-B', Planck15, stellar_mass=sm)
-    np.testing.assert_allclose(mB_s, mB - 2.5*np.log10(sm))
-
-    mB = kcorrect.apparent_magnitudes(coeff, z, multiple_filters, Planck15)
-    mB_s = kcorrect.apparent_magnitudes(coeff, z, multiple_filters, Planck15, stellar_mass=sm)
-    np.testing.assert_allclose(mB_s, mB - 2.5*np.log10(sm)[:, np.newaxis])
-
 
 @pytest.mark.skipif(not HAS_SPECLITE, reason='test requires speclite')
 def test_kcorrect_stellar_mass():
@@ -179,8 +160,3 @@ def test_kcorrect_star_formation_rates():
     m1000 = np.sum(kcorrect.mass1000) / np.sum(kcorrect.mass)
     np.testing.assert_allclose(kcorrect.m300(coefficients), m300)
     np.testing.assert_allclose(kcorrect.m1000(coefficients), m1000)
-
-    # Test using stellar mass argument
-    sm = np.array([10, 20, 30, 40, 50])
-    np.testing.assert_allclose(kcorrect.m300(coefficients, sm), m300 * sm)
-    np.testing.assert_allclose(kcorrect.m1000(coefficients, sm), m1000 * sm)
