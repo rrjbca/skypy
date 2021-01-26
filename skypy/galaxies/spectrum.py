@@ -7,6 +7,7 @@ from astropy.io import fits
 import numpy as np
 from pkg_resources import resource_filename
 from skypy.utils.photometry import SpectrumTemplates
+from skypy.utils.random import dirichlet
 
 
 __all__ = [
@@ -97,16 +98,9 @@ def dirichlet_coefficients(redshift, alpha0, alpha1, z1=1., weight=None):
         raise ValueError('weight must be 1D and match alpha0, alpha1')
 
     redshift = np.expand_dims(redshift, -1)
-
     alpha = np.power(alpha0, 1-redshift/z1)*np.power(alpha1, redshift/z1)
 
-    # sample Dirichlet by normalising independent gamma draws
-    coeff = np.random.gamma(alpha)
-    if weight is not None:
-        coeff *= weight
-    coeff /= coeff.sum(axis=-1)[..., np.newaxis]
-
-    return coeff
+    return dirichlet(alpha, weight=weight)
 
 
 class KCorrectTemplates(SpectrumTemplates):

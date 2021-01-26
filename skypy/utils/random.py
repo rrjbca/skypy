@@ -10,12 +10,39 @@ Utility Functions
    :nosignatures:
    :toctree: ../api/
 
+   dirichlet
    schechter
    triaxial_axis_ratio
 
 """
 
 import numpy as np
+
+
+def dirichlet(alpha, size=None, weight=None):
+    r"""Sample from a Dirichlet distribution.
+
+    Parameters
+    ----------
+    alpha : array_like
+        The alpha parameter in the Dirichlet distribution.
+    size : array_like, optional
+    weight : array_like, optional
+        Optional factors to reweight each component of the Dirichlet
+        distribution.
+
+    Returns
+    -------
+    samples : ndarray
+        Samples drawn from the Dirichlet distribution.
+    """
+
+    samples = np.random.gamma(alpha, size=size)
+    if weight is not None:
+        samples *= weight
+    samples /= samples.sum(axis=-1)[..., np.newaxis]
+
+    return samples
 
 
 def schechter(alpha, x_min, x_max, resolution=100, size=None, scale=1.):
