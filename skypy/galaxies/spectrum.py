@@ -17,7 +17,7 @@ __all__ = [
 ]
 
 
-def dirichlet_coefficients(redshift, alpha0, alpha1, z1=1., weight=None):
+def dirichlet_coefficients(redshift, alpha0, alpha1, z1=1., weight=None, stellar_mass=None):
     r"""Dirichlet-distributed SED coefficients.
 
     Spectral coefficients to calculate the rest-frame spectral energy
@@ -35,6 +35,10 @@ def dirichlet_coefficients(redshift, alpha0, alpha1, z1=1., weight=None):
        Reference redshift at which alpha = alpha1. The default value is 1.0.
     weight : (nc,) array_like, optional
         Different weights for each component.
+    stellar_mass : (nz,) array_like, optional
+        Normalisation factor equal to the total stellar mass of each galaxy. If
+        not given then the coefficients returned for each galaxy will have unit
+        norm instead.
 
     Returns
     -------
@@ -99,8 +103,9 @@ def dirichlet_coefficients(redshift, alpha0, alpha1, z1=1., weight=None):
 
     redshift = np.expand_dims(redshift, -1)
     alpha = np.power(alpha0, 1-redshift/z1)*np.power(alpha1, redshift/z1)
+    normalisation = stellar_mass if stellar_mass is not None else 1
 
-    return dirichlet(alpha, weight=weight)
+    return dirichlet(alpha, weight=weight) * normalisation
 
 
 class KCorrectTemplates(SpectrumTemplates):
