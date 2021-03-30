@@ -34,13 +34,13 @@ def test_classy():
     wavenumber = np.logspace(-4.0, np.log10(2.0), 200)
     pzk = ps(wavenumber, redshift)
     assert pzk.shape == (len(redshift), len(wavenumber))
-    assert allclose(pzk, test_pzk, rtol=1.e-4)
+    assert allclose(pzk, test_pzk, rtol=1.e-3)
 
     # also check redshifts are ordered correctly
     redshift = [1.0, 0.0]
     pzk = ps(wavenumber, redshift)
     assert pzk.shape == (len(redshift), len(wavenumber))
-    assert allclose(pzk, test_pzk[np.argsort(redshift)], rtol=1.e-4)
+    assert allclose(pzk, test_pzk[np.argsort(redshift)], rtol=1.e-3)
 
     # also check scalar arguments are treated correctly
     redshift = 1.0
