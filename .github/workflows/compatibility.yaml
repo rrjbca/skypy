@@ -1,7 +1,5 @@
 name: Compatibility
-on:
-  schedule:
-    - cron: '0 4 * * SUN'
+on: push
 jobs:
   test:
     runs-on: ${{ matrix.os }}
@@ -11,16 +9,11 @@ jobs:
         os: [ubuntu-latest]
         python: ['3.12']
         toxenv: [py312-test, py312-test-dev]
-        release: [main, latest]
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
-    - if: matrix.release != 'main'
-      name: Checkout Release
-      run: |
-        git checkout tags/$(curl -s https://api.github.com/repos/skypyproject/skypy/releases/${{ matrix.release }} | python -c "import sys, json; print(json.load(sys.stdin)['tag_name'])")
     - name: Install Python ${{ matrix.python }}
       uses: actions/setup-python@v5
       with:
