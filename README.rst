@@ -8,7 +8,7 @@ This package contains methods for modelling the Universe, galaxies and the
 Milky Way. SkyPy simulates populations of astronomical objects, generating
 random realisations of intrinsic and observed properties, with the
 intention the simulations can then be compared to data as part of an inference
-pipeline.
+pipeline. 
 
 Currently, SkyPy implements the following modules:
 
